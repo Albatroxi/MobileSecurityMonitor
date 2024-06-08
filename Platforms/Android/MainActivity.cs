@@ -8,6 +8,9 @@ using Android.Widget;
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
 using Microsoft.Maui.Controls.Compatibility;
+using MobileSecurityMonitor.Models.Rest;
+using MobileSecurityMonitor.Pages;
+using Newtonsoft.Json;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 
@@ -37,11 +40,9 @@ namespace MobileSecurityMonitor
                 accessLocation = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
             }
 
-            //var device_id = Android.Provider.Settings.Secure.GetString(Android.App.Application.Context.ContentResolver, Android.Provider.Settings.Secure.AndroidId);
+            var device_id = Android.Provider.Settings.Secure.GetString(Android.App.Application.Context.ContentResolver, Android.Provider.Settings.Secure.AndroidId);
 
-            //await SecureStorage.SetAsync("IMEI", device_id);
-
-            //Console.WriteLine("TESTE: " + device_id);
+            await SecureStorage.SetAsync("IMEI", device_id);
 
         }
     }

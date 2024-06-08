@@ -11,13 +11,13 @@ namespace MobileSecurityMonitor.Services
         private CancellationTokenSource _cts;
         public async Task IniciarTarefasPeriodicas(CancellationToken token)
         {
-            var hourday = new Services.Tarefas.Data_Hora();
+            //var hourday = new Services.Tarefas.Data_Hora();
             var infoDetals = new Services.Tarefas.Dispositivo();
 
 
             while (!token.IsCancellationRequested)
             {
-                hourday.datahora();
+                //hourday.datahora();
                 await infoDetals.obterIMEi();
                 //await infoDetals.obterDetalhes();
 

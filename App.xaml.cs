@@ -1,4 +1,7 @@
-﻿namespace MobileSecurityMonitor
+﻿using MobileSecurityMonitor.Models.Rest;
+using Newtonsoft.Json;
+
+namespace MobileSecurityMonitor
 {
     public partial class App : Application
     {
@@ -8,14 +11,23 @@
             InitializeComponent();
 
             MainPage = new AppShell();
+
+            // Chama o método assíncrono
+            InitializeAppAsync();
         }
 
+        private async void InitializeAppAsync()
+        {
+            var testeIMEI = await SecureStorage.GetAsync("IMEI");
+
+            MainPage = new Pages.Registrar(testeIMEI);
+        }
         protected override void OnStart()
         {
             var impTarefas = new Services.TarefasPeriodicas();
 
             _cts = new CancellationTokenSource();
-            Task.Run(() => impTarefas.IniciarTarefasPeriodicas(_cts.Token));
+            //Task.Run(() => impTarefas.IniciarTarefasPeriodicas(_cts.Token));
 
         }
 
@@ -27,8 +39,10 @@
 
         protected override void OnResume()
         {
-            // Inicia Novamente
-            //BackgroundAggregatorService.StartBackgroundService();
+            var impTarefas = new Services.TarefasPeriodicas();
+
+            _cts = new CancellationTokenSource();
+            Task.Run(() => impTarefas.IniciarTarefasPeriodicas(_cts.Token));
         }
     }
 }

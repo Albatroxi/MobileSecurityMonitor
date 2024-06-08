@@ -14,9 +14,6 @@ namespace MobileSecurityMonitor
 
         private async void OnCounterClicked(object sender, EventArgs e)
         {
-            var teste = new Services.Tarefas.ProprietariosServices();
-
-            await teste.carregaProprietarios();
             count++;
 
             if (count == 1)
