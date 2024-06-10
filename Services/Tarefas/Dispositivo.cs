@@ -1,16 +1,12 @@
-﻿
-using Microsoft.Maui.Controls.PlatformConfiguration;
-using MobileSecurityMonitor.Models.Rest;
-using MobileSecurityMonitor.Pages;
-using Newtonsoft.Json;
-using System.Text;
+﻿using System.Text;
 
 namespace MobileSecurityMonitor.Services.Tarefas
 {
-    public class Dispositivo 
+    public class Dispositivo
     {
         public async Task obterIMEi()
         {
+
             var meuIMEI = await SecureStorage.GetAsync("IMEI");
             var meuCPF = await SecureStorage.GetAsync("CPF");
 
@@ -25,8 +21,11 @@ namespace MobileSecurityMonitor.Services.Tarefas
 
         public async Task checkAndRegister(string IMEIdisp, int cProprietario)
         {
+            var esconDer = new Services.Tarefas.ShowHide();
+            var registraProprietario = new Services.Tarefas.Proprietarios();
             var meuValor = await SecureStorage.GetAsync("IMEI");
             var meuCPF = await SecureStorage.GetAsync("CPF");
+            var localiza = new Localizacao();
 
             string imei = IMEIdisp;
             int cpf = cProprietario;
@@ -50,21 +49,14 @@ namespace MobileSecurityMonitor.Services.Tarefas
                         //response.EnsureSuccessStatusCode();
 
                         // Verifica o status code da resposta
-                        if (responseCheck.IsSuccessStatusCode)
+                        if (responseCheck.IsSuccessStatusCode && responsecheckCPF.IsSuccessStatusCode)
                         {
                             //Console.WriteLine("EXISTE IMEI JÁ");
 
-                            var localiza = new Localizacao();
+                            
 
                             await localiza.obterLocalizacao(IMEIdisp);
                         }
-
-                        if (responsecheckCPF.StatusCode == System.Net.HttpStatusCode.NotFound)
-                        {
-                            Console.WriteLine("SEM CPF");
-                        }
-
-
 
                         var newDisp = new
                         {
@@ -73,24 +65,20 @@ namespace MobileSecurityMonitor.Services.Tarefas
                             fabricante = DeviceInfo.Current.Manufacturer,
                             plataforma = DeviceInfo.Current.Platform.ToString(),
                             tipo = DeviceInfo.Current.DeviceType.ToString(),
-                            cproprietario = cProprietario
-
-
-                        };
-
-                        var newProprt = new
-                        {
-                            codigo = cProprietario,
-                            nome = "",
-                            cpf = meuCPF
+                            cproprietario = cProprietario,
 
                         };
+
+                        registraProprietario.criaProprietario(cProprietario.ToString());
 
                         var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(newDisp),
-                            Encoding.UTF8,"application/json");
+                            Encoding.UTF8, "application/json");
 
                         var responsRegister = await client.PostAsync(apiUrl_regDisp, content);
 
+                        await localiza.obterLocalizacao(IMEIdisp);
+
+                        esconDer.Esconder();
 
                     }
                     catch (HttpRequestException e)
@@ -101,5 +89,6 @@ namespace MobileSecurityMonitor.Services.Tarefas
                 }
             }
         }
+
     }
 }

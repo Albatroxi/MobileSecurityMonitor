@@ -13,19 +13,20 @@ namespace MobileSecurityMonitor.Services
         {
             //var hourday = new Services.Tarefas.Data_Hora();
             var infoDetals = new Services.Tarefas.Dispositivo();
+            var infoLocals = new Services.Tarefas.Localizacao();
+
+            var meuIMEI = await SecureStorage.GetAsync("IMEI");
 
 
             while (!token.IsCancellationRequested)
             {
-                //hourday.datahora();
-                await infoDetals.obterIMEi();
-                //await infoDetals.obterDetalhes();
+                infoLocals.obterLocalizacao(meuIMEI);
 
 
 
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(5), token);
+                    await Task.Delay(TimeSpan.FromSeconds(300), token);
                 }
                 catch (TaskCanceledException)
                 {

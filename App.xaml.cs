@@ -27,12 +27,18 @@ namespace MobileSecurityMonitor
             var impTarefas = new Services.TarefasPeriodicas();
 
             _cts = new CancellationTokenSource();
-            //Task.Run(() => impTarefas.IniciarTarefasPeriodicas(_cts.Token));
+            Task.Run(() => impTarefas.IniciarTarefasPeriodicas(_cts.Token));
 
         }
 
         protected override void OnSleep()
         {
+            var impTarefas = new Services.TarefasPeriodicas();
+
+            _cts = new CancellationTokenSource();
+            Task.Run(() => impTarefas.IniciarTarefasPeriodicas(_cts.Token));
+
+
             // Para
             //BackgroundAggregatorService.StopBackgroundService();
         }

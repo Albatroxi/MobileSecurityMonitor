@@ -14,5 +14,7 @@ namespace MobileSecurityMonitor.Models.Rest
         public double lon { get; set; }
         [Key]
         public string c_imei { get; set; }
+
+        public DateTime registro { get; set; }
     }
 }
